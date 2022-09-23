@@ -1,0 +1,65 @@
+create table team(
+tname varchar(50) primary key,
+city varchar(50) not null,
+coach varchar(50) not null,
+pid int not null
+);
+
+create table player(
+playerid int primary key,
+pname varchar(50),
+position varchar(50) not null,
+skill_level int not null,
+tname varchar(50) references team(tname),
+fromdate date
+);
+
+insert into team(tname,city,coach,pid)
+values('abc','bgm','ab',1);
+
+insert into team(tname,city,coach,pid)
+values('bcd','bgm','ab',2);
+
+insert into team(tname,city,coach,pid)
+values('cde','blr','bb',3);
+
+insert into team(tname,city,coach,pid)
+values('def','blr','bb',4);
+
+insert into player(playerid,pname,position,skill_level,tname,fromdate)
+values(1,'samyok','right',5,'abc','2022-11-09');
+
+insert into player(playerid,pname,position,skill_level,tname,fromdate)
+values(2,'sam','left',5,'bcd','2022-11-09');
+
+insert into player(playerid,pname,position,skill_level,tname,fromdate)
+values(3,'see','left',5,'cde','2022-11-09');
+
+insert into player(playerid,pname,position,skill_level,tname,fromdate)
+values(4,'smi','left',5,'def','2022-11-09');
+
+alter table team add foreign key(pid) references player(playerid);
+
+create table injury_record(
+injdate date not null,
+severity int not null,
+descrip varchar(50),
+pid int,
+primary key(descrip, pid),
+foreign key(pid) references player(playerid)
+);
+
+create table game(
+host varchar(50),
+guest varchar(50),
+gdate date,
+score int not null,
+primary key(host,guest),
+foreign key(host) references team(tname),
+foreign key(guest) references team(tname)
+);
+
+insert into injury_record values('2022-01-01',5,'major',2);
+insert into injury_record values('2022-01-01',1,'minor',3);
+
+insert into game values('abc','bcd','2022-11-09',9);

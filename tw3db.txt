@@ -1,0 +1,72 @@
+create table flights(
+fno int primary key,
+fplace varchar(50) not null,
+tplace varchar(50) not null,
+distance int,
+depart date not null,
+arrive date not null,
+price real
+);
+
+create table aircrafts(
+aid int primary key,
+aname varchar(50) not null,
+crange int
+);
+
+create table employees(
+eid int primary key,
+ename varchar(50) not null,
+salary real not null
+);
+
+create table certified(
+eid int references employees(eid),
+aid int references aircrafts(aid)
+);
+
+insert into flights values(255,'bangalore','frankfut',200,'01-07-11','01-07-11',5000.00);
+insert into flights values(256,'bangalore','frankfut',200,'01-07-11','01-07-11',8000.00);
+insert into flights values(257,'bangalore','delhi',200,'01-07-11','01-07-11',5000.00);
+insert into flights values(258,'bangalore','delhi',200,'01-07-11','01-07-11',6000.00);
+insert into flights values(259,'bangalore','mangalore',200,'01-07-11','01-07-11',8000.00);
+
+insert into aircrafts values(685,'boeing15',1000);
+insert into aircrafts values(686,'boeing10',2000);
+insert into aircrafts values(687,'skytrain',1000);
+insert into aircrafts values(688,'avenger',100);
+insert into aircrafts values(689,'thor',5000);
+
+
+insert into employees values(101,'asha',90000);
+insert into employees values(102,'arun',85000);
+insert into employees values(103,'anand',3000);
+insert into employees values(104,'ramya',4000);
+
+insert into certified values(101,685);
+insert into certified values(101,686);
+insert into certified values(101,687);
+insert into certified values(101,688);
+insert into certified values(102,685);
+insert into certified values(103,686);
+insert into certified values(103,687);
+
+select distinct(aname) from aircrafts a, certified c, employees e
+where a.aid = c.aid and
+e.eid = c.eid and
+e.salary > 80000;
+
+SELECT C.eid, MAX(A.crange) FROM certified C, aircrafts A 
+WHERE C.aid = A.aid 
+GROUP BY C.eid 
+HAVING COUNT(*) >= 3;
+
+select distinct ename from  employees e
+where e.salary < (select min(price) from flights f where f.fplace = 'bangalore' and f.tplace = 'frankfut');
+
+select distinct aid from aircrafts a 
+where a.crange >=(select max(distance) from flights f where f.fplace = 'bangalore' and f.tplace = 'delhi');
+
+SELECT DISTINCT E.ENAME FROM aircrafts A, certified C, employees E WHERE A.aid = C.AID AND C.eid=E.eid AND A.aname LIKE 'boeing%';
+
+SELECT fno, fplace, tplace, distance FROM flights WHERE price<=5000;

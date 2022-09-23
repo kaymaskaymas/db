@@ -1,0 +1,71 @@
+create table actor(
+actorid int primary key,
+aname varchar(50) not null,
+agender varchar(50)
+);
+
+create table director(
+directorid int primary key,
+dname varchar(50) not null,
+dphone int
+);
+
+create table movies(
+movieid int primary key,
+title varchar(50),
+year int,
+language varchar(50),
+did int references director(directorid)
+);
+
+create table mcast(
+aid int,
+mid int,
+role varchar(15),
+//primary key(aid,mid),
+foreign key (aid) references actor(actorid),
+foreign key (mid) references movies(movieid)
+);
+
+create table rating(
+mid int references movies(movieid),
+stars real
+);
+
+insert into actor values(101, 'rahul', 'M');
+insert into actor values(102, 'ankita', 'F');
+insert into actor values(103, 'radhika', 'F');
+insert into actor values(104, 'vivan', 'M');
+
+insert into director values(201,'anup',88888888);
+insert into director values(202,'slb',88848888);
+insert into director values(203,'rgv',88858888);
+insert into director values(204,'anand',88886888);
+
+insert into movies values(1001,'ram leela',2017,'hindi',202);
+insert into movies values(1002,'lol',2015,'hindi',202);
+insert into movies values(1003,'ram',2007,'hindi',201);
+insert into movies values(1004,'leela',2010,'hindi',204);
+
+insert into mcast values(101,1002,'hero');
+insert into mcast values(102,1001,'hero');
+insert into mcast values(103,1003,'hero');
+insert into mcast values(104,1004,'guest');
+
+insert into rating values(1001,4);
+insert into rating values(1002,2);
+insert into rating values(1004,5);
+insert into rating values(1003,4);
+
+select title from movies, director
+where director.directorid = movies.did and
+dname = 'slb';
+
+SELECT title FROM movies m, mcast c
+WHERE m.movieid = c.mid AND aid IN 
+(SELECT aid FROM mcast 
+GROUP BY aid 
+HAVING COUNT(aid) > 1) 
+GROUP BY title 
+HAVING COUNT(*)>1;
+

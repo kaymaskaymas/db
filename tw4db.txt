@@ -1,0 +1,55 @@
+create table salesman(
+salesmanid int primary key,
+sname varchar(50) not null,
+city varchar(50),
+commission real
+);
+
+create table customer(
+customerid int primary key,
+cname varchar(50),
+city varchar(50),
+grade int,
+sid int references salesman(salesmanid) on delete set null
+);
+
+create table orders(
+ordno int primary key,
+purchase_amt real,
+odate date,
+cid int references customer(customerid) on delete cascade,
+sid int references salesman(salesmanid) on delete cascade
+);
+
+insert into salesman values(1000,'john','blr',25);
+insert into salesman values(1001,'ravi','blr',20);
+insert into salesman values(1002,'kumar','bgm',29);
+insert into salesman values(1004,'vicky','bgm',45);
+
+insert into customer values(1,'sachi','blr',100,1000);
+insert into customer values(2,'veena','mlr',300,1000);
+insert into customer values(3,'meena','blr',500,1002);
+insert into customer values(4,'pri','bgm',400,1001);
+
+insert into orders values(111,500,'2002-01-01',2,1001);
+insert into orders values(222,600,'2002-02-01',1,1001);
+insert into orders values(444,900,'2002-01-02',2,1000);
+insert into orders values(555,800,'2002-01-05',2,1000);
+
+select count(customerid) 
+from customer
+where grade >(select avg(grade) from customer where city = 'blr'); 
+
+select sname,salesmanid
+from salesman
+where 1 < (select count(*) from customer where customer.sid = salesman.salesmanid);
+
+select salesman.sname, customer.cname
+from salesman, customer, orders
+where salesman.salesmanid = orders.sid and
+customer.customerid = orders.cid and
+purchase_amt>500;
+
+delete from salesman where salesmanid = 1000;
+
+select * from salesman;
