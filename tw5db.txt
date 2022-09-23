@@ -69,3 +69,19 @@ HAVING COUNT(aid) > 1)
 GROUP BY title 
 HAVING COUNT(*)>1;
 
+SELECT title, MAX(stars) 
+FROM movies INNER JOIN 
+rating USING (mid) / (movieid)
+GROUP BY title 
+HAVING MAX(stars)>0 
+ORDER BY title;
+
+UPDATE rating 
+SET stars = 5 
+WHERE mid IN 
+(SELECT movieid 
+FROM movies 
+WHERE did IN 
+(SELECT directorid 
+FROM director 
+WHERE dname ="rgv"));
